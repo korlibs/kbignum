@@ -5,12 +5,12 @@ import com.soywiz.kbignum.internal.bitCount
 import com.soywiz.kbignum.internal.leadingZeros
 import kotlin.math.*
 import kotlin.time.ExperimentalTime
-import kotlin.time.measureTime
+//import kotlin.time.measureTime
 
 /**
  * @TODO: Use JVM BigInteger and JS BigInt
  */
-class BigInt private constructor(val data: UInt16ArrayZeroPad, val signum: Int, var dummy: Boolean) {
+class BigInt private constructor(val data: UInt16ArrayZeroPad, val signum: Int, var dummy: Boolean)/*: Number()*/ {
 	val isSmall get() = data.size <= 1
 	val isZero get() = signum == 0
 	val isNotZero get() = signum != 0
@@ -374,11 +374,17 @@ class BigInt private constructor(val data: UInt16ArrayZeroPad, val signum: Int, 
 		return out.reversed().toString()
 	}
 
+    fun toDouble() = toString().toDouble()
+    fun toFloat() = toString().toFloat()
+    fun toLong() = toString().toLong()
 	fun toInt(): Int {
 		if (significantBits > 31) error("Can't represent BigInt($this) as integer: maxBits=$maxBits, significantBits=$significantBits, trailingZeros=${trailingZeros()}")
 		val magnitude = (this.data[0].toLong() or (this.data[1].toLong() shl 16)) * signum
 		return magnitude.toInt()
 	}
+    fun toShort() = toString().toShort()
+    fun toByte() = toString().toByte()
+    fun toChar() = toInt().toChar()
 
 	fun toBigNum(): BigNum = BigNum(this, 0)
 }

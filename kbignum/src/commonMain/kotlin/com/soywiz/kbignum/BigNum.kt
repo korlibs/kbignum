@@ -2,7 +2,7 @@ package com.soywiz.kbignum
 
 import com.soywiz.kbignum.internal.*
 
-class BigNum(val int: BigInt, val scale: Int) {
+class BigNum(val int: BigInt, val scale: Int)/*: Number()*/ {
 	init {
 		//println("BigNum($int, $scale) == $this")
 	}
@@ -31,6 +31,7 @@ class BigNum(val int: BigInt, val scale: Int) {
         else -> BigNum(int / (10.bi pow (this.scale - otherScale)), otherScale)
     }
 
+    operator fun unaryMinus(): BigNum = BigNum(-int, scale)
 	operator fun plus(other: BigNum): BigNum = binary(other, BigInt::plus)
 	operator fun minus(other: BigNum): BigNum = binary(other, BigInt::minus)
 	operator fun times(other: BigNum): BigNum =
@@ -68,7 +69,7 @@ class BigNum(val int: BigInt, val scale: Int) {
 
 	override fun equals(other: Any?): Boolean = (other is BigNum) && this.compareTo(other) == 0
 
-	private fun commonScale(other: BigNum) = max2(this.scale, other.scale)
+    private fun commonScale(other: BigNum) = max2(this.scale, other.scale)
 
 	private inline fun binary(other: BigNum, callback: (l: BigInt, r: BigInt) -> BigInt): BigNum {
 		val commonScale = this.commonScale(other)
@@ -78,6 +79,14 @@ class BigNum(val int: BigInt, val scale: Int) {
 		val ri = r.int
 		return BigNum(callback(li, ri), commonScale)
 	}
+
+    fun toDouble() = toString().toDouble()
+    fun toFloat() = toString().toFloat()
+    fun toLong() = toString().toLong()
+    fun toInt() = toString().toInt()
+    fun toShort() = toString().toShort()
+    fun toByte() = toString().toByte()
+    fun toChar() = toInt().toChar()
 
 	override fun toString(): String {
         val isNegative = int.isNegative
